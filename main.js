@@ -5,6 +5,11 @@ var ObjectId = require('mongodb').ObjectID;
 var express = require('express');
 var app = express();
 const https = require('https');
+const bodyParser= require('body-parser');
+app.use(express.static('public'));
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.set('view engine', 'ejs')
 
 //Connect to local database
 mongoose.connect('mongodb://localhost/imgurdb');
@@ -64,34 +69,34 @@ var options = {
 };
 
 //The request for imgur images
-var req = https.request(options, (res) => {
-    console.log('statusCode:', res.statusCode);
-    console.log('headers:', res.headers);
-
-    res.on('data', (chunk) => {
-        imgData += chunk;        
-    });
-    
-    res.on('end', function() {
-        imgData = JSON.parse(imgData);
-        
-        while (i < 100)   {   
-            var kuva = new Image(imgData.data[i]);
-            
-            kuva.save(function (err, kuva) {
-                if (err) return console.error(err);
-            });
-
-            output += imgData.data[i];
-            i++;
-        }
-    });
-});
-
-req.end();
-req.on('error', (e) => {
-  console.log(`problem with request: ${e.message}`);
-});
+//var req = https.request(options, (res) => {
+//    console.log('statusCode:', res.statusCode);
+//    console.log('headers:', res.headers);
+//
+//    res.on('data', (chunk) => {
+//        imgData += chunk;        
+//    });
+//    
+//    res.on('end', function() {
+//        imgData = JSON.parse(imgData);
+//        
+//        while (i < 100)   {   
+//            var picdata = new Image(imgData.data[i]);
+//            
+//            picdata.save(function (err, kuva) {
+//                if (err) return console.error(err);
+//            });
+//
+//            output += imgData.data[i];
+//            i++;
+//        }
+//    });
+//});
+//
+//req.end();
+//req.on('error', (e) => {
+//  console.log(`problem with request: ${e.message}`);
+//});
 
       
 //Server up
@@ -100,12 +105,20 @@ app.listen(3000, function () {
 });
 
 //log every data entries
-Image.find(function (err, images) {
-    if (err) return console.error(err);
-    
-    //send data entries to front
-    app.get('/', function (req, res) { 
-        res.send(images)
-    })
-   
-});     
+//Image.find(function (err, images) {
+//    if (err) return console.error(err);
+//  
+//}); 
+
+//app.get('/', function (req, res) {
+//  res.sendfile(__dirname+'/public/index.html');
+//});
+
+
+app.get('/', (req, res) => {
+  db.collection('images').find().toArray((err, result) => {
+    if (err) return console.log(err)
+    // renders index.ejs
+    res.render('index.ejs', {images: result})
+  });
+});
