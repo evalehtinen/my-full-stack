@@ -5,12 +5,9 @@ var ObjectId = require('mongodb').ObjectID;
 var express = require('express');
 var app = express();
 const https = require('https');
-const bodyParser= require('body-parser');
-app.use(express.static('public'));
 var path = require('path');
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.set('view engine', 'ejs')
+
 
 //Connect to local database
 mongoose.connect('mongodb://localhost/imgurdb');
@@ -19,6 +16,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('Connected to database');
 });
+db.collection('images').remove({}); //Clean any old imagedatas
 
 //Moongose schema for imgur data
 var ImgurSchema = new mongoose.Schema({  
@@ -48,20 +46,14 @@ var ImgurSchema = new mongoose.Schema({
 });
 
 var Image = mongoose.model('Image', ImgurSchema);
-
-//Imgur secrets
-//0a7756c769047ea
-//49c6aa66247a49a8e2257a968cb66681f060927a
-
 var imgData = '';
 var i = 0;
-var output = '';
 
 //Options for https.request
 var options = {
     hostname: 'api.imgur.com',
     port: 443,    
-    path: '/3/gallery/hot/viral/2',
+    path: '/3/gallery/hot/viral',
     method: 'GET',
     headers: {
     'Authorization':'Client-ID 0a7756c769047ea'
@@ -70,56 +62,49 @@ var options = {
 };
 
 //The request for imgur images
-//var req = https.request(options, (res) => {
-//    console.log('statusCode:', res.statusCode);
-//    console.log('headers:', res.headers);
-//
-//    res.on('data', (chunk) => {
-//        imgData += chunk;        
-//    });
-//    
-//    res.on('end', function() {
-//        imgData = JSON.parse(imgData);
-//        
-//        while (i < 100)   {   
-//            var picdata = new Image(imgData.data[i]);
-//            
-//            picdata.save(function (err, kuva) {
-//                if (err) return console.error(err);
-//            });
-//
-//            output += imgData.data[i];
-//            i++;
-//        }
-//    });
-//});
-//
-//req.end();
-//req.on('error', (e) => {
-//  console.log(`problem with request: ${e.message}`);
-//});
+var req = https.request(options, (res) => {
+    console.log('statusCode:', res.statusCode);
+    console.log('headers:', res.headers);
 
-      
+    res.on('data', (chunk) => {
+        imgData += chunk;        
+    });
+    
+    res.on('end', function() {
+        imgData = JSON.parse(imgData);
+        
+        while (i < 100)   {   
+            var picdata = new Image(imgData.data[i]);
+            
+            picdata.save(function (err, kuva) {
+                if (err) return console.error(err);
+            });            
+            i++;
+        }
+    });
+});
+
+req.end();
+req.on('error', (e) => {
+  console.log(`problem with request: ${e.message}`);
+});
+
+app.use(express.static('public'));      
 //Server up
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });
 
-//log every data entries
-//Image.find(function (err, images) {
-//    if (err) return console.error(err);
-//  
-//});
-
+//Send index.html to client
 app.get('/', (req, res) => {      
     res.sendFile(path.join(__dirname +'/index.html'));
 });
 
+//The API for searching images 
 app.get('/images', (req, res) => {    
     db.collection('images').find({$text: {$search: req.query.search}}).toArray((err, result) => {
     if (err) return console.log(err)
     res.send(result);
-    console.log(req.query.search);
-    
+    console.log(req.query.search);    
     });
 });
