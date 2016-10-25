@@ -108,17 +108,21 @@ app.listen(3000, function () {
 //Image.find(function (err, images) {
 //    if (err) return console.error(err);
 //  
-//}); 
-
-//app.get('/', function (req, res) {
-//  res.sendfile(__dirname+'/public/index.html');
 //});
 
+app.get('/', (req, res) => {      
+    db.collection('images').find().toArray((err, result) => {
+        if (err) return console.log(err)
+    res.render('index.ejs', {images: result})
+    });
+});
 
-app.get('/', (req, res) => {
-  db.collection('images').find().toArray((err, result) => {
+app.get('/search', (req, res) => {
+    var query = req.query.search;
+    db.collection('images').find({title: req.query.search}).toArray((err, result) => {
     if (err) return console.log(err)
     // renders index.ejs
     res.render('index.ejs', {images: result})
-  });
+    console.log(req.query.search);
+    });
 });
