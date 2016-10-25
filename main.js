@@ -7,6 +7,7 @@ var app = express();
 const https = require('https');
 const bodyParser= require('body-parser');
 app.use(express.static('public'));
+var path = require('path');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs')
@@ -22,7 +23,7 @@ db.once('open', function() {
 //Moongose schema for imgur data
 var ImgurSchema = new mongoose.Schema({  
         id: String,
-        title: String,
+        title: {type: String, text: true },
         description: String,
         datetime: {type: Date, default: Date.now },
         type: String,
@@ -111,18 +112,15 @@ app.listen(3000, function () {
 //});
 
 app.get('/', (req, res) => {      
-    db.collection('images').find().toArray((err, result) => {
-        if (err) return console.log(err)
-    res.render('index.ejs', {images: result})
-    });
+    res.sendFile(path.join(__dirname +'/index.html'));
 });
 
-app.get('/search', (req, res) => {
-    var query = req.query.search;
-    db.collection('images').find({title: req.query.search}).toArray((err, result) => {
-    if (err) return console.log(err)
-    // renders index.ejs
-    res.render('index.ejs', {images: result})
+app.get('/search', (req, res) => {        
+    
+//    db.collection('images').find({$text: {$search: req.query.search}}).toArray((err, result) => {
+//    if (err) return console.log(err)
+   res.sendFile(path.join(__dirname +'/scripts.js'));
+    
     console.log(req.query.search);
-    });
+//    });
 });
