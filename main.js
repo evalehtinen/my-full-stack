@@ -115,12 +115,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname +'/index.html'));
 });
 
-app.get('/search', (req, res) => {        
-    
-//    db.collection('images').find({$text: {$search: req.query.search}}).toArray((err, result) => {
-//    if (err) return console.log(err)
-   res.sendFile(path.join(__dirname +'/scripts.js'));
-    
+app.get('/images', (req, res) => {    
+    db.collection('images').find({$text: {$search: req.query.search}}).toArray((err, result) => {
+    if (err) return console.log(err)
+    res.send(result);
     console.log(req.query.search);
-//    });
+    
+    });
 });
