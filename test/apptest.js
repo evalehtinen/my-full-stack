@@ -15,14 +15,14 @@ chai.use(chaiHttp);
   */
   describe('/GET images', () => {
       it('it should GET images', (done) => {
-        var testimage = new Image({title: "flowers"})
+        var testimage = new Image({title: "this that his her his it"})
         testimage.save((err, testimage) => {                      
         chai.request(server)
             .get('/images')            
-            .send(testimage.title)
+            .query({search: testimage.title})
             .end((err, res) => {
                 res.should.have.status(200);
-//                res.body.should.be.a('array');
+                res.body.should.be.a('array');
 //                res.body.length.should.be.eql(1);
               done();
             });

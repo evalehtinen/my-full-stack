@@ -1,12 +1,9 @@
 
 $(document).ready(function(){
-//     $('.alltitles').load('', function(data) {
-//         console.log(data);
-//         $.each(data, function(i, item) {            
-//                $('.alltitles').text(data[i].title);
-//             
-//         });             
-//     });
+  $.get('date', function(data) {
+      $('.refreshed').text(data);
+      console.log("JAAHASD");
+  });
     
     //Since we are not using form, the entery key doesnt use submit button by deafult. This fixes it.
     $(function() {
@@ -30,16 +27,22 @@ $(document).ready(function(){
             }
             else {
                 $.each(data, function(i, item) {
-                    if(!data[i].animated) {
+                    if(data[i].id && !data[i].animated) {
                         $('.images').append('<div class="image-embed"><blockquote class="imgur-embed-pub" lang="en" data-id="a/'+data[i].id+'"><a href="//imgur.com/'+data[i].id+'">'+data[i].description+'</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>'); 
                         console.log(data[i].id);
                     }
-                    if(data[i].animated) {
+                    if(data[i].id && data[i].animated) {
                         $('.images').append('<div class="image-embed"><blockquote class="imgur-embed-pub" lang="en" data-id="'+data[i].id+'"><a href="//imgur.com/'+data[i].id+'">'+data[i].description+'</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>'); 
                         console.log(data[i].id);
                     }                
                 });
             }              
+        });
+    });
+    $('#refreshbtn').click(function() {
+        console.log("benis");
+        $.get( 'refresh', function(data) {
+            $('.refreshed').text(data);
         });
     });
 });
