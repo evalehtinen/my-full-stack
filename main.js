@@ -1,53 +1,22 @@
-var http = require("http");
-var mongoose = require('mongoose');
-var assert = require('assert');
-var ObjectId = require('mongodb').ObjectID;
-var express = require('express');
-var app = express();
+const mongoose = require('mongoose');
+const assert = require('assert');
+const ObjectId = require('mongodb').ObjectID;
+const express = require('express');
+const app = express();
 const https = require('https');
-var path = require('path');
+const path = require('path');
+const Image = require('./models/image');
 
-
-
+module.exports = app; //For test
 //Connect to local database
-mongoose.connect('mongodb://localhost/imgurdb');
+mongoose.connect('mongodb://imguruser:salasana@ds061354.mlab.com:61354/heroku_r8t497xt');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('Connected to database');
 });
-db.collection('images').remove({}); //Clean any old imagedatas
+db.collection('images').remove({}); //Remove any old imagedatas
 
-//Moongose schema for imgur data
-var ImgurSchema = new mongoose.Schema({  
-        id: String,
-        title: {type: String, text: true },
-        description: String,
-        datetime: {type: Date, default: Date.now },
-        type: String,
-        animated: Boolean,
-        width: Number,
-        height: Number,
-        size: Number,
-        views: Number,
-        bandwidth: Number,
-        deletehash: String,
-        name: String,   
-        section: String,
-        link: String,
-        gifv: String,
-        mp4: String,
-        mp4_size: Number,
-        looping: Boolean,
-        favourite: Boolean,
-        nsfw: Boolean,
-        vote: String,
-        in_gallery: Boolean
-});
-
-var Image = mongoose.model('Image', ImgurSchema);
-var imgData = '';
-var i = 0;
 
 //Options for https.request
 var options = {
@@ -63,6 +32,8 @@ var options = {
 
 //The request for imgur images
 var req = https.request(options, (res) => {
+    var imgData = '';
+    var i = 0;
     console.log('statusCode:', res.statusCode);
     console.log('headers:', res.headers);
 
@@ -91,15 +62,18 @@ req.on('error', (e) => {
 
 app.use(express.static('public'));      
 //Server up
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+app.listen(process.env.PORT || 3000, function () {
+  console.log('Listening on port 3000!');
 });
 
-//Send index.html to client
-app.get('/', (req, res) => {      
-    res.sendFile(path.join(__dirname +'/index.html'));
-});
-
+//Trying to load all the titles on page load and send to client
+//app.get('/', (req, res) => {
+//    db.collection('images').find({$text: {$search: 'flowers'}}).toArray((err, result) => {
+//        if (err) return console.log(err)
+//        res.send(result);
+//        console.log(result);
+//    })
+//})
 //The API for searching images 
 app.get('/images', (req, res) => {    
     db.collection('images').find({$text: {$search: req.query.search}}).toArray((err, result) => {
