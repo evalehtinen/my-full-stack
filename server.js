@@ -13,7 +13,7 @@ module.exports = app; //For test
 var timeRefreshed = '';
 
 //Connect to remote database
-mongoose.connect('mongodb://imguruser:salasana@ds061354.mlab.com:61354/heroku_r8t497xt');
+mongoose.connect('mongodb://imguruser:salasana@ds135577.mlab.com:35577/heroku_t93zv9sr');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
