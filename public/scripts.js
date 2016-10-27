@@ -8,7 +8,7 @@ $(document).ready(function(){
     $(function() {
         $('#searchtext').keypress(function (e) {
             if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-                $('input[type=submit]').click();
+                $('#submitbtn').click();
                 return false;
             } else {
                 return true;
@@ -38,7 +38,7 @@ $(document).ready(function(){
     });
     $('#refreshbtn').click(function() {        
         $.get( 'refresh', function(data) {
-            $('.refreshed-time').text(data);
+            $('.refreshed-time').text(Date(data));
         });
     });
 });
