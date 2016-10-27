@@ -1,8 +1,7 @@
 
 $(document).ready(function(){
   $.get('date', function(data) {
-      $('.refreshed-time').text(data);
-      console.log("JAAHASD");
+      $('.refreshed-time').text(data);     
   });
     
     //Since we are not using form, the entery key doesnt use submit button by deafult. This fixes it.
@@ -28,19 +27,16 @@ $(document).ready(function(){
             else {
                 $.each(data, function(i, item) {
                     if(data[i].id && !data[i].animated) {
-                        $('.images').append('<div class="image-embed"><blockquote class="imgur-embed-pub" lang="en" data-id="a/'+data[i].id+'"><a href="//imgur.com/'+data[i].id+'">'+data[i].description+'</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>'); 
-                        console.log(data[i].id);
+                        $('.images').append('<div class="image-embed"><blockquote class="imgur-embed-pub" lang="en" data-id="a/'+data[i].id+'"><a href="//imgur.com/'+data[i].id+'">'+data[i].description+'</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>');                         
                     }
                     if(data[i].id && data[i].animated) {
-                        $('.images').append('<div class="image-embed"><blockquote class="imgur-embed-pub" lang="en" data-id="'+data[i].id+'"><a href="//imgur.com/'+data[i].id+'">'+data[i].description+'</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>'); 
-                        console.log(data[i].id);
+                        $('.images').append('<div class="image-embed"><blockquote class="imgur-embed-pub" lang="en" data-id="'+data[i].id+'"><a href="//imgur.com/'+data[i].id+'">'+data[i].description+'</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></div>');                        
                     }                
                 });
             }              
         });
     });
-    $('#refreshbtn').click(function() {
-        console.log("benis");
+    $('#refreshbtn').click(function() {        
         $.get( 'refresh', function(data) {
             $('.refreshed-time').text(data);
         });

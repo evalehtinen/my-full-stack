@@ -100,6 +100,5 @@ app.get('/refresh', (req, res) => {
     imagereq((resp) => {        
         res.send(resp);
         console.log('Database refreshed: ' + resp);    
-    });
-           
+    });           
 });
