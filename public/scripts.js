@@ -1,7 +1,7 @@
 
 $(document).ready(function(){
   $.get('date', function(data) {
-      $('.refreshed').text(data);
+      $('.refreshed-time').text(data);
       console.log("JAAHASD");
   });
     
@@ -42,7 +42,7 @@ $(document).ready(function(){
     $('#refreshbtn').click(function() {
         console.log("benis");
         $.get( 'refresh', function(data) {
-            $('.refreshed').text(data);
+            $('.refreshed-time').text(data);
         });
     });
 });

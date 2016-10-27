@@ -1,0 +1,44 @@
+
+
+Listening on port 3000!
+  /GET date
+Page load
+    √ it should get the timestamp when the database was refreshed last time
+
+  /GET images
+statusCode: 200
+headers: { 'content-type': 'application/json',
+  'access-control-expose-headers': 'X-RateLimit-ClientLimit, X-RateLimit-ClientRemaining, X-RateLimit-UserLimit, X-RateLimit-UserRemaining, X-RateLimit-UserReset',
+  'x-ratelimit-clientlimit': '12500',
+  'x-ratelimit-clientremaining': '12484',
+  'x-ratelimit-userlimit': '500',
+  'x-ratelimit-userremaining': '493',
+  'x-ratelimit-userreset': '1477559495',
+  etag: '"36435e5e9f0b0090b30e269283237bafce565524"',
+  'cache-control': 'max-age=60, stale-while-revalidate=600, stale-if-error=86400, public',
+  'fastly-debug-digest': '7bd016eaa672248b35c5882c020d4fb1165599b3426abea57cfdb19bbcc1c579',
+  'content-length': '34268',
+  'accept-ranges': 'bytes',
+  date: 'Thu, 27 Oct 2016 08:42:41 GMT',
+  age: '0',
+  connection: 'close',
+  'x-served-by': 'cache-iad2151-IAD, cache-bma7029-BMA',
+  'x-cache': 'MISS, MISS',
+  'x-cache-hits': '0, 0',
+  vary: 'X-Show-Mature, Accept-Encoding',
+  'access-control-allow-methods': 'GET, PUT, POST, DELETE, OPTIONS',
+  'access-control-allow-origin': '*',
+  'access-control-allow-headers': 'Authorization, Content-Type, Accept, X-Mashape-Authorization, IMGURPLATFORM, IMGURUIDJAFO, sessionCount, IMGURMWBETA, IMGURMWBETAOPTIN',
+  server: 'cat factory 1.0',
+  'x-frame-options': 'DENY' }
+Connected to database
+Search with a keyword: testing
+    √ it should GET images (1584ms)
+
+  /GET refresh
+Database refreshed: 27.10.2016 11:42
+    √ it should refresh database and get timestamp
+
+
+  3 passing (2s)
+

@@ -1,5 +1,8 @@
 body {
     font-family: 'Oswald', sans-serif;
+    max-width: 1100px;
+    margin: auto;
+    position: relative;
 }
 .title {
     text-align: center;
@@ -13,10 +16,16 @@ body {
     font-size: 0.9em;
     font-weight: 300;
 }
+.refresh-wrap {
+    position: absolute;
+    right:30;
+    top:30;
+    color: #B9B9B9;
+    max-width: 140px;
+}
 .search-box {
     max-width: 500px;
-    margin: auto;
-    text-align: center;
+    margin: auto;    
     color: #8c8c8c;
     display: block;
     padding: 9px;
@@ -48,7 +57,7 @@ body {
     font-size: 1em;
     overflow: hidden;
 }
-.search-box input[type=submit] {
+.btn {
     border: none;
     padding: 8px 15px 8px 15px;
     background: #fcabee;
@@ -61,7 +70,7 @@ body {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
 }
-.search-box input[type=submit]:hover {
+.btn:hover {
     background: #a3729b;
     color: #fff;
 }
@@ -74,4 +83,13 @@ body {
     display: inline-block;
     max-height: 200px;
     padding: 0 20 20 0;
+}
+@media screen and (max-width: 1000px) {
+    .refresh-wrap {
+        position:inherit;
+        right:auto;
+        top:auto;
+        
+        margin:20 auto 20 auto;
+    }
 }

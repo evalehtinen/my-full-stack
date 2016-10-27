@@ -10,6 +10,8 @@ const moment = require('moment');
 
 module.exports = app; //For test
 
+var timeRefreshed = '';
+
 //Connect to remote database
 mongoose.connect('mongodb://imguruser:salasana@ds061354.mlab.com:61354/heroku_r8t497xt');
 var db = mongoose.connection;
@@ -18,22 +20,19 @@ db.once('open', function() {
   console.log('Connected to database');
 });
 
-var timeRefreshed = '';
-
-//Options for https.request
-var options = {
-    hostname: 'api.imgur.com',
-    port: 443,    
-    path: '/3/gallery/hot/viral',
-    method: 'GET',
-    headers: {
-    'Authorization':'Client-ID 0a7756c769047ea'
-  }
-
-};
-
-//The request for imgur images
-function imagereq() {    
+//The https request for imgur images
+var imagereq = function(resp) {
+    
+    //Options for https.request
+    var options = {
+        hostname: 'api.imgur.com',
+        port: 443,    
+        path: '/3/gallery/hot/viral',
+        method: 'GET',
+        headers: {
+        'Authorization':'Client-ID 0a7756c769047ea'
+        }
+    };
     db.collection('images').remove({}); //Remove any old imagedatas
     var req = https.request(options, (res) => {
         var imgData = '';
@@ -48,6 +47,7 @@ function imagereq() {
         res.on('end', function() {
             imgData = JSON.parse(imgData);
 
+            //Imgur sends over 500 top images, we want only 100.
             while (i < 100)   {   
                 var picdata = new Image(imgData.data[i]);
 
@@ -56,17 +56,22 @@ function imagereq() {
                 });            
                 i++;
             }
+            
+            //On request success and everything's done, store timestamp for later use
+            timeRefreshed = moment().format("DD.MM.YYYY HH:mm:ss");
+            return resp(timeRefreshed);
         });
     });
-    req.end();
-    req.on('error', (e) => {
-      console.log(`problem with request: ${e.message}`);    
-    });
+    req.end();   
+    req.on('error', (e) => {        
+        console.log(`problem with request: ${e.message}`);        
+    }); 
     
-    timeRefreshed = moment().format("DD.MM.YYYY HH:mm");    
 }
 
-imagereq();
+imagereq((resp) => {
+    console.log("Database refreshed: " +resp);
+});
 
 app.use(express.static('public')); 
 
@@ -74,23 +79,27 @@ app.use(express.static('public'));
 app.listen(process.env.PORT || 3000, function () {
   console.log('Listening on port 3000!');
 });
-//Send the client a timestamp last time when the database was refreshed
+
+//Send the client a timestamp when the database was refreshed last time
 app.get('/date', (req, res) => { 
     res.send(timeRefreshed);
-    console.log('Page load');
+    console.log('Page load ' + timeRefreshed);
 });
+
 //Search images with search keyword
 app.get('/images', (req, res) => {
     db.collection('images').find({$text: {$search: req.query.search}}).toArray((err, result) => {
     if (err) return console.log(err)
     res.send(result);
-    console.log(req.query.search);    
+    console.log("Search with a keyword: " + req.query.search);    
     });
 });
+
 //Refresh the database on button click
-app.get('/refresh', (req, res) => {    
-    imagereq();    
-    timeRefreshed = moment().format("DD.MM.YYYY HH:mm");
-    console.log('Database refreshed');
-    res.send(timeRefreshed);
+app.get('/refresh', (req, res) => {     
+    imagereq((resp) => {        
+        res.send(resp);
+        console.log('Database refreshed: ' + resp);    
+    });
+           
 });

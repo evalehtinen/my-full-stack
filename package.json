@@ -1,8 +1,8 @@
 {
-  "name": "nodejs",
+  "name": "my-full-stack",
   "version": "1.0.0",
   "description": "",
-  "main": "hello.js",
+  "main": "server.js",
   "dependencies": {
     "chai": "^3.5.0",
     "express": "^4.14.0",
@@ -20,7 +20,7 @@
     "nodemon": "^1.11.0"
   },
   "scripts": {
-    "test": "mocha --reporter spec --timeout 10000",
+    "test": "mocha -R spec --timeout 10000 test/test.js > report",
     "dev": "nodemon main.js"
   },
   "author": "",
