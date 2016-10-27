@@ -58,7 +58,7 @@ var imagereq = function(resp) {
             }
             
             //On request success and everything's done, store timestamp for later use
-            timeRefreshed = moment().format("DD.MM.YYYY HH:mm:ss");
+            timeRefreshed = moment.utc();
             return resp(timeRefreshed);
         });
     });

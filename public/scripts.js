@@ -1,7 +1,8 @@
 
 $(document).ready(function(){
   $.get('date', function(data) {
-      $('.refreshed-time').text(data);     
+      var localDate = moment(data).local();      
+      $('.refreshed-time').text(localDate.format("YYYY-MM-DD HH:mm:ss"));     
   });
     
     //Since we are not using form, the entery key doesnt use submit button by deafult. This fixes it.
@@ -38,7 +39,8 @@ $(document).ready(function(){
     });
     $('#refreshbtn').click(function() {        
         $.get( 'refresh', function(data) {
-            $('.refreshed-time').text(Date(data));
+            var localDate = moment(data).local();
+            $('.refreshed-time').text(localDate.format("YYYY-MM-DD HH:mm:ss"));
         });
     });
 });
