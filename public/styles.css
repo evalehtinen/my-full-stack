@@ -18,8 +18,8 @@ body {
 }
 .refresh-wrap {
     position: absolute;
-    right:30;
-    top:30;
+    right:30px;
+    top:30px;
     color: #B9B9B9;
     max-width: 140px;
 }
@@ -88,8 +88,7 @@ body {
     .refresh-wrap {
         position:inherit;
         right:auto;
-        top:auto;
-        
-        margin:20 auto 20 auto;
+        top:auto;        
+        margin:20px auto 20px auto;
     }
 }
