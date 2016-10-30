@@ -70,7 +70,7 @@ var imagereq = function(resp) {
 }
 
 imagereq((resp) => {
-    console.log("Database refreshed: " +resp);
+    console.log("Database refreshed: " + moment(resp).format("YYYY-MM-DD HH:mm:ss"));
 });
 
 app.use(express.static('public')); 
@@ -83,7 +83,7 @@ app.listen(process.env.PORT || 3000, function () {
 //Send the client a timestamp when the database was refreshed last time
 app.get('/date', (req, res) => { 
     res.send(timeRefreshed);
-    console.log('Page load ' + timeRefreshed);
+    console.log('Page load ' + moment(timeRefreshed).format("YYYY-MM-DD HH:mm:ss"));
 });
 
 //Search images with search keyword
@@ -99,6 +99,6 @@ app.get('/images', (req, res) => {
 app.get('/refresh', (req, res) => {     
     imagereq((resp) => {        
         res.send(resp);
-        console.log('Database refreshed: ' + resp);    
+        console.log('Database refreshed: ' + moment(resp).format("YYYY-MM-DD HH:mm:ss"));    
     });           
 });
