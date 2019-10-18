@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "@types/node": "^12.11.1",
     "chai": "^3.5.0",
     "express": "^4.14.0",
     "httpdispatcher": "^1.0.0",
@@ -14,14 +15,17 @@
     "serve-static": "^1.11.1"
   },
   "devDependencies": {
-    "mocha": "^3.1.2",
     "chai": "^3.5.0",
     "chai-http": "^2.0.1",
-    "nodemon": "^1.11.0"
+    "mocha": "^3.1.2",
+    "nodemon": "^1.11.0",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.4"
   },
   "scripts": {
     "test": "mocha -R spec --timeout 10000 test/test.js > report",
-    "dev": "nodemon main.js"
+    "dev": "nodemon main.js",
+    "start": "ts-node server.ts"
   },
   "author": "",
   "license": "ISC"
